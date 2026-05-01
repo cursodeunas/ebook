@@ -588,6 +588,58 @@
     line-height: 1.6;
   }
 
+  /* ===== COUNTDOWN ===== */
+  .countdown-wrap {
+    margin: 0 auto 28px;
+    text-align: center;
+  }
+  .countdown-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .countdown-boxes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .cbox {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    min-width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .cbox span {
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: #000;
+    line-height: 1;
+    min-width: 2ch;
+    display: block;
+  }
+  .cbox small {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #666;
+    text-transform: uppercase;
+  }
+  .cdot {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--magenta);
+    margin-bottom: 18px;
+  }
+
   /* Scroll animation observer */
   .reveal {
     opacity: 0;
@@ -710,6 +762,20 @@
     <span class="badge" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7)">PDF digital</span>
     <span class="badge" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7)">Tuyo para siempre</span>
   </div>
+  <!-- COUNTDOWN TIMER -->
+  <div class="countdown-wrap reveal">
+    <p class="countdown-label">⏰ ESTA OFERTA TERMINA EN:</p>
+    <div class="countdown-boxes">
+      <div class="cbox"><span id="cd-h">35</span><small>DÍAS</small></div>
+      <div class="cdot">:</div>
+      <div class="cbox"><span id="cd-m">49</span><small>HORAS</small></div>
+      <div class="cdot">:</div>
+      <div class="cbox"><span id="cd-s">00</span><small>MINS</small></div>
+<div class="cdot">:</div>
+<div class="cbox"><span id="cd-sec">00</span><small>SEG</small></div>
+    </div>
+  </div>
+
   <p class="precio-tachado reveal">USD $14.99</p>
   <p class="precio-nuevo reveal">USD $9.99</p>
   <p class="acceso reveal">Acceso inmediato tras tu compra</p>
@@ -819,6 +885,49 @@
 </footer>
 
 <script>
+// ===== COUNTDOWN TIMER (CORREGIDO) =====
+
+// Hora actual
+const now = new Date();
+
+// Fecha objetivo: próximo sábado 11:59 PM
+const deadline = new Date();
+const day = now.getDay();
+const diff = (6 - day + 7) % 7 || 7;
+
+deadline.setDate(now.getDate() + diff);
+deadline.setHours(23, 59, 0, 0);
+
+// Función del contador
+function updateCountdown() {
+  const nowTime = new Date().getTime();
+  const remaining = deadline.getTime() - nowTime;
+
+  if (remaining <= 0) {
+    document.getElementById('cd-h').textContent = '00';
+    document.getElementById('cd-m').textContent = '00';
+    document.getElementById('cd-s').textContent = '00';
+    document.getElementById('cd-sec').textContent = '00';
+    return;
+  }
+
+  const totalSecs = Math.floor(remaining / 1000);
+
+  const days = Math.floor(totalSecs / 86400);
+  const hours = Math.floor((totalSecs % 86400) / 3600);
+  const minutes = Math.floor((totalSecs % 3600) / 60);
+  const seconds = totalSecs % 60;
+
+  document.getElementById('cd-h').textContent = String(days).padStart(2, '0');
+  document.getElementById('cd-m').textContent = String(hours).padStart(2, '0');
+  document.getElementById('cd-s').textContent = String(minutes).padStart(2, '0');
+  document.getElementById('cd-sec').textContent = String(seconds).padStart(2, '0');
+}
+
+// Ejecutar
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
 // FAQ toggle
 function toggleFaq(btn) {
   const item = btn.parentElement;
